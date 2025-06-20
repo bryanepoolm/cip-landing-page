@@ -1,11 +1,13 @@
 <?php
+
 /**
  * PHP Email Form
  * Version: 1.0
  * Author: BootstrapMade.com
  */
 
-class PHP_Email_Form {
+class PHP_Email_Form
+{
 
   public $to = '';
   public $from_name = '';
@@ -18,7 +20,8 @@ class PHP_Email_Form {
 
   public $ajax = false;
 
-  public function add_message($content, $label = '', $length = 0) {
+  public function add_message($content, $label = '', $length = 0)
+  {
     if (!empty($length) && strlen($content) < (int)$length) {
       return;
     }
@@ -33,14 +36,15 @@ class PHP_Email_Form {
     $this->messages[] = $message;
   }
 
-  public function send() {
+  public function send()
+  {
     $message_content = implode('', $this->messages);
 
     $headers = 'MIME-Version: 1.0' . "\r\n";
     $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
 
-    $headers .= 'From: '. $this->from_name .' <'. $this->from_email .'>' . "\r\n";
-    $headers .= 'Reply-To: '. $this->from_email . "\r\n";
+    $headers .= 'From: ' . $this->from_name . ' <' . $this->from_email . '>' . "\r\n";
+    $headers .= 'Reply-To: ' . $this->from_email . "\r\n";
 
     $subject = $this->subject;
 
@@ -50,15 +54,17 @@ class PHP_Email_Form {
       if (mail($this->to, $subject, $message_content, $headers)) {
         return 'OK';
       } else {
-        return 'No se pudo enviar el correo.'.var_dump($this->to, $subject, $message_content, $headers);
+        return 'No se pudo enviar el correo.';
       }
     }
   }
 
-  private function smtp_send($subject, $message_content, $headers) {
-    require_once 'PHPMailer/PHPMailer.php';
-    require_once 'PHPMailer/SMTP.php';
-    require_once 'PHPMailer/Exception.php';
+  private function smtp_send($subject, $message_content, $headers)
+  {
+    require_once __DIR__ . '/../phpmailer/src/PHPMailer.php';
+    require_once __DIR__ . '/../phpmailer/src/SMTP.php';
+    require_once __DIR__ . '/../phpmailer/src/Exception.php';
+
 
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
@@ -71,7 +77,7 @@ class PHP_Email_Form {
       $mail->SMTPSecure = 'tls';
       $mail->Port = $this->smtp['port'];
 
-      $mail->setFrom($this->from_email, $this->from_name);
+      $mail->setFrom($this->to, 'Formulario de contacto');
       $mail->addAddress($this->to);
       $mail->addReplyTo($this->from_email, $this->from_name);
 
